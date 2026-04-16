@@ -179,7 +179,7 @@ export const attendanceAPI = {
   getMy:          (month?: string, year?: string) => api.get('/attendance/my', { params: { month, year } }),
   getAdmin:       (date?: string) => api.get('/attendance/admin', { params: { date } }),
   getReport:      (params: any) => api.get('/attendance/report', { params }),
-  startBreak:     (break_type: 'lunch' | 'short') => api.post('/attendance/break/start', { break_type }),
+  startBreak:     (break_type: 'lunch' | 'short' | 'meeting') => api.post('/attendance/break/start', { break_type }),
   endBreak:       () => api.post('/attendance/break/end'),
   getBreaksAdmin: (date?: string) => api.get('/attendance/breaks/admin', { params: { date } }),
 };
@@ -339,6 +339,14 @@ export const leadsAPI = {
   delete:       (id: number) => api.delete(`/leads/${id}`),
   addFollowup:  (id: number, data: any) => api.post(`/leads/${id}/followups`, data),
   convert:      (id: number, data: any) => api.post(`/leads/${id}/convert`, data),
+};
+
+export const domainAPI = {
+  getAll:    () => api.get('/domains'),
+  getAlerts: () => api.get('/domains/alerts'),
+  create:    (data: any) => api.post('/domains', data),
+  update:    (id: number, data: any) => api.put(`/domains/${id}`, data),
+  delete:    (id: number) => api.delete(`/domains/${id}`),
 };
 
 export const financeAPI = {

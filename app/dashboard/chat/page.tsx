@@ -68,7 +68,12 @@ export default function ChatPage() {
   const fetchContacts = async () => {
     try {
       const res = await messageAPI.getContacts();
-      setContacts(res.data);
+      const sorted = [...res.data].sort((a, b) => {
+        const ta = a.last_message?.timestamp || '';
+        const tb = b.last_message?.timestamp || '';
+        return tb.localeCompare(ta);
+      });
+      setContacts(sorted);
     } catch (err) {
       console.error('Failed to fetch contacts', err);
     } finally {

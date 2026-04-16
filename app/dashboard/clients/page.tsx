@@ -84,6 +84,13 @@ export default function ClientsPage() {
     if (sendTarget) loadProposals(sendTarget.id);
   };
 
+  const handleStageUpdate = async (clientId: number, stage: string) => {
+    try {
+      await clientAPI.update(clientId, { status: stage });
+      loadClients();
+    } catch { /* ignore */ }
+  };
+
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
@@ -149,11 +156,12 @@ export default function ClientsPage() {
               <div className="flex gap-1.5 mt-4 overflow-x-auto pb-1">
                 {STAGES.map(stage => (
                   <div key={stage}
+                    onClick={() => isAdmin && handleStageUpdate(client.id, stage)}
                     className={`px-2.5 py-1 rounded-lg text-xs whitespace-nowrap font-medium transition-all ${
                       client.status === stage
                         ? 'bg-primary-500 text-white shadow-sm'
                         : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-500'
-                    }`}>
+                    } ${isAdmin ? 'cursor-pointer hover:bg-primary-400 hover:text-white' : ''}`}>
                     {stage.replace(/_/g, ' ')}
                   </div>
                 ))}

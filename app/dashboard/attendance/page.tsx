@@ -143,7 +143,7 @@ export default function AttendancePage() {
     finally { setLoading(false); }
   };
 
-  const handleBreakStart = async (type: 'lunch' | 'short') => {
+  const handleBreakStart = async (type: 'lunch' | 'short' | 'meeting') => {
     setLoading(true);
     try { await attendanceAPI.startBreak(type); await loadToday(); }
     catch (e: any) { alert(e.response?.data?.error || 'Failed to start break'); }
@@ -219,6 +219,10 @@ export default function AttendancePage() {
                 <button onClick={() => handleBreakStart('lunch')} disabled={loading}
                   className="btn-secondary gap-2">
                   🍽️ Lunch Break
+                </button>
+                <button onClick={() => handleBreakStart('meeting')} disabled={loading}
+                  className="btn-secondary gap-2">
+                  📋 Meeting Break
                 </button>
                 <button onClick={handleCheckOut} disabled={loading}
                   className="btn-primary bg-red-500 hover:bg-red-600 gap-2">

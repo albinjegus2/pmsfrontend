@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { FiHome, FiUsers, FiCheckSquare, FiClock, FiBarChart2, FiLogOut, FiMoon, FiSun, FiGrid, FiSettings, FiCalendar, FiActivity, FiUmbrella, FiShield, FiMessageSquare, FiPieChart, FiChevronDown, FiChevronRight, FiDollarSign, FiUser, FiGlobe, FiFolder, FiTrendingUp } from 'react-icons/fi';
 import { useAuth } from '../utils/AuthContext';
 import { useState, useEffect } from 'react';
+import { domainAPI } from '../utils/api';
 
 const ROLE_COLORS: Record<string, string> = {
   admin: 'bg-red-500/20 text-red-400 border-red-500/30',
@@ -25,6 +26,17 @@ export default function Sidebar() {
   const { user, logout } = useAuth();
   const [darkMode, setDarkMode] = useState(false);
   const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
+  const [domainAlertCount, setDomainAlertCount] = useState(0);
+
+  useEffect(() => {
+    if (user && ['admin', 'crm_head', 'marketing_head', 'team_lead'].includes(user.role)) {
+      domainAPI.getAlerts().then(r => setDomainAlertCount(r.data.total_alerts)).catch(() => {});
+      const t = setInterval(() => {
+        domainAPI.getAlerts().then(r => setDomainAlertCount(r.data.total_alerts)).catch(() => {});
+      }, 60000);
+      return () => clearInterval(t);
+    }
+  }, [user]);
 
   const navItems = [
     { href: '/dashboard', icon: FiHome, label: 'Dashboard', roles: ['admin', 'marketing_head', 'developer', 'smm', 'crm_head', 'client', 'team_lead', 'employee'] },
@@ -50,6 +62,7 @@ export default function Sidebar() {
     { href: '/dashboard/leaves',       icon: FiUmbrella,  label: 'Leave',         roles: ['admin', 'marketing_head', 'developer', 'smm', 'crm_head', 'team_lead', 'employee'] },
     { href: '/dashboard/salary',       icon: FiDollarSign, label: 'Salary',        roles: ['admin', 'marketing_head'] },
     { href: '/dashboard/finance',      icon: FiDollarSign, label: 'Finance',       roles: ['admin', 'crm_head', 'marketing_head'] },
+    { href: '/dashboard/domains', icon: FiGlobe, label: 'Domains', roles: ['admin', 'crm_head', 'marketing_head', 'team_lead'], alert: domainAlertCount },
     { href: '/dashboard/permissions',  icon: FiShield,         label: 'Permissions',   roles: ['admin', 'marketing_head', 'developer', 'smm', 'crm_head', 'team_lead', 'employee'] },
     { href: '/dashboard/feedback',     icon: FiMessageSquare,  label: 'Feedback',      roles: ['admin', 'marketing_head', 'developer', 'smm', 'crm_head', 'team_lead', 'employee'] },
     { href: '/dashboard/analytics',    icon: FiPieChart,       label: 'HR Analytics',  roles: ['admin', 'marketing_head', 'crm_head', 'team_lead'] },
@@ -167,7 +180,12 @@ export default function Sidebar() {
                 >
                   <Icon size={17} className={isActive ? 'text-primary-500 dark:text-gold' : ''} />
                   <span>{item.label}</span>
-                  {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-primary-500 dark:bg-gold" />}
+                  {(item as any).alert > 0 && (
+                    <span className="ml-auto px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-red-500 text-white">
+                      {(item as any).alert}
+                    </span>
+                  )}
+                  {isActive && !(item as any).alert && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-primary-500 dark:bg-gold" />}
                 </Link>
               )}
             </div>
