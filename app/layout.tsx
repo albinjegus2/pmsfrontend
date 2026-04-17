@@ -27,6 +27,10 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        <script src="https://apis.google.com/js/api.js" async defer></script>
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+      </head>
       <body>
         <AuthProvider>
           <div className="min-h-screen bg-gray-50 dark:bg-darker">

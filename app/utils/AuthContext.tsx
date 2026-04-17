@@ -14,6 +14,12 @@ interface User {
   manager_id?: number;
   team_name?: string;
   department_name?: string;
+  profile_image?: string;
+  bio?: string;
+  dob?: string;
+  address?: string;
+  emergency_contact_name?: string;
+  emergency_contact_phone?: string;
 }
 
 interface AuthContextType {

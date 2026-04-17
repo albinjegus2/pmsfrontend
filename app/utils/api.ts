@@ -99,8 +99,11 @@ export const authAPI = {
   getCurrentUser: () => api.get('/auth/me'),
   getUsers:       (params?: any) => api.get('/auth/users', { params }),
   changePassword: (data: any) => api.post('/auth/change-password', data),
-  updateProfile:  (data: { name?: string; phone?: string }) => api.put('/auth/profile', data),
+  updateProfile:  (data: any) => api.put('/auth/profile', data),
   updateUser:     (userId: number, data: any) => api.put(`/auth/users/${userId}`, data),
+  uploadProfileImage: (formData: FormData) =>
+    api.post('/auth/profile/image', formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  getProfileImageUrl: (filename: string) => `${API_URL}/auth/profile/image/${filename}`,
 };
 
 export const clientAPI = {

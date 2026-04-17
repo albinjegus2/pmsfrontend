@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FiHome, FiUsers, FiCheckSquare, FiClock, FiBarChart2, FiLogOut, FiMoon, FiSun, FiGrid, FiSettings, FiCalendar, FiActivity, FiUmbrella, FiShield, FiMessageSquare, FiPieChart, FiChevronDown, FiChevronRight, FiDollarSign, FiUser, FiGlobe, FiFolder, FiTrendingUp } from 'react-icons/fi';
+import { FiHome, FiUsers, FiCheckSquare, FiClock, FiBarChart2, FiLogOut, FiMoon, FiSun, FiGrid, FiSettings, FiCalendar, FiActivity, FiUmbrella, FiShield, FiMessageSquare, FiPieChart, FiChevronDown, FiChevronRight, FiDollarSign, FiUser, FiGlobe, FiFolder, FiTrendingUp, FiHardDrive } from 'react-icons/fi';
 import { useAuth } from '../utils/AuthContext';
 import { useState, useEffect } from 'react';
 import { domainAPI } from '../utils/api';
@@ -49,6 +49,7 @@ export default function Sidebar() {
     { href: '/dashboard/worklogs', icon: FiClock, label: 'Work Logs', roles: ['admin', 'marketing_head', 'developer', 'smm', 'crm_head', 'team_lead', 'employee'] },
     { href: '/dashboard/chat', icon: FiMessageSquare, label: 'Messenger', roles: ['admin', 'marketing_head', 'developer', 'smm', 'crm_head', 'client', 'team_lead', 'employee'] },
     { href: '/dashboard/documents', icon: FiFolder, label: 'Documents', roles: ['admin', 'marketing_head', 'developer', 'smm', 'crm_head', 'team_lead', 'employee'] },
+    { href: '/dashboard/gdrive', icon: FiHardDrive, label: 'Google Drive', roles: ['admin', 'marketing_head', 'developer', 'smm', 'crm_head', 'team_lead', 'employee', 'crm'] },
     { href: '/dashboard/reports', icon: FiBarChart2, label: 'Reports', roles: ['admin', 'marketing_head', 'crm_head', 'team_lead'] },
     { 
       label: 'Attendance', 
@@ -103,6 +104,8 @@ export default function Sidebar() {
 
   const initials = user?.name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase() || '?';
   const avatarColor = AVATAR_COLORS[(user?.name?.charCodeAt(0) || 0) % AVATAR_COLORS.length];
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  const profileImgUrl = user?.profile_image ? `${API_URL}/auth/profile/image/${user.profile_image}` : null;
 
   return (
     <div className="sidebar w-64 bg-sidebar dark:bg-sidebar h-screen fixed left-0 top-0 flex flex-col border-r border-sidebar-border">
@@ -117,8 +120,11 @@ export default function Sidebar() {
 
         {/* User info */}
         <Link href="/dashboard/profile" className="flex items-center gap-3 p-2 -m-2 rounded-xl hover:bg-white/5 transition-all">
-          <div className={`w-9 h-9 rounded-xl ${avatarColor} flex items-center justify-center flex-shrink-0`}>
-            <span className="text-white text-xs font-bold">{initials}</span>
+          <div className={`w-9 h-9 rounded-xl ${avatarColor} flex items-center justify-center flex-shrink-0 overflow-hidden`}>
+            {profileImgUrl
+              ? <img src={profileImgUrl} alt={user?.name} className="w-full h-full object-cover" />
+              : <span className="text-white text-xs font-bold">{initials}</span>
+            }
           </div>
           <div className="min-w-0">
             <p className="text-sm font-semibold text-white truncate">{user?.name}</p>
