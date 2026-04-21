@@ -144,7 +144,7 @@ export default function GoogleDrivePage() {
     if (!file) return;
     setUploading(true);
     try {
-      const metadata = { name: file.name, mimeType: file.mimeType };
+      const metadata = { name: file.name, mimeType: file.type };
       const form = new FormData();
       form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
       form.append('file', file);
