@@ -361,4 +361,10 @@ export const financeAPI = {
   updateTotal:      (clientId: number, total_amount: number) => api.put(`/finance/clients/${clientId}/total`, { total_amount }),
 };
 
+export const adminChatAPI = {
+  getMessages:  () => api.get('/admin/chat/messages'),
+  sendMessage:  (message: string) => api.post('/admin/chat/send', { message }),
+  getUnread:    () => api.get('/admin/chat/unread'),
+};
+
 export default api;
